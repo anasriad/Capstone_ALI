@@ -45,7 +45,6 @@ const translations = {
   },
 };
 
-
 function FitBounds({ coords1, coords2 }: { coords1: LatLngTuple; coords2: LatLngTuple }) {
   const map = useMap();
   useEffect(() => {
@@ -62,8 +61,8 @@ function haversineDistance(coords1: LatLngTuple, coords2: LatLngTuple) {
   const a =
     Math.sin(dLat / 2) ** 2 +
     Math.cos(toRad(coords1[0])) *
-    Math.cos(toRad(coords2[0])) *
-    Math.sin(dLon / 2) ** 2;
+      Math.cos(toRad(coords2[0])) *
+      Math.sin(dLon / 2) ** 2;
   const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
   return R * c;
 }
@@ -115,12 +114,23 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-linear-to-b from-red-600/80 to-red-900/90 flex flex-col items-center justify-center p-6 text-white">
-      <div className="absolute top-4 right-4 flex gap-2">
+    <div className="min-h-screen w-full bg-linear-to-b from-black via-blue-900 to-black flex flex-col items-center justify-center p-6 text-white relative overflow-hidden">
+      
+      <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-0.5 bg-white/20 animate-[shimmer_2s_infinite]"></div>
+        <div className="absolute top-20 left-0 w-full h-0.5 bg-white/15 animate-[shimmer_3s_infinite]"></div>
+        <div className="absolute top-40 left-0 w-full h-0.5 bg-white/10 animate-[shimmer_4s_infinite]"></div>
+      </div>
+
+      <div className="absolute top-4 right-4 flex gap-2 z-20">
         {["en", "fr", "ar"].map((lang) => (
           <button
             key={lang}
-            className={`px-3 py-1 rounded-full font-semibold ${language === lang ? "bg-white/20" : ""}`}
+            className={`px-3 py-1 rounded-full font-semibold transition-colors duration-300 ${
+              language === lang
+                ? "bg-blue-600/50 text-white shadow-lg"
+                : "bg-black/30 text-white hover:bg-blue-700/50"
+            }`}
             onClick={() => setLanguage(lang as "en" | "fr" | "ar")}
           >
             {lang.toUpperCase()}
@@ -134,14 +144,14 @@ export default function LandingPage() {
         initial={{ opacity: 0, y: -40 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="w-32 h-32 mb-8 drop-shadow-xl"
+        className="w-32 h-32 mb-8 drop-shadow-[0_0_20px_rgba(0,150,255,0.8)]"
       />
 
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6 }}
-        className="text-3xl font-bold tracking-wide text-center"
+        className="text-3xl font-bold tracking-wide text-center drop-shadow-md"
       >
         {t.welcome}
       </motion.h1>
@@ -150,15 +160,15 @@ export default function LandingPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.4, duration: 0.6 }}
-        className="text-center text-sm mt-3 max-w-xs"
+        className="text-center text-sm mt-3 max-w-xs drop-shadow-sm"
       >
         {t.subtitle}
       </motion.p>
 
-      <div className="mt-10 w-full max-w-xs flex flex-col gap-4">
+      <div className="mt-10 w-full max-w-xs flex flex-col gap-4 z-20">
         <motion.button
           whileTap={{ scale: 0.95 }}
-          className="w-full py-3 rounded-2xl bg-white text-red-700 font-semibold shadow-lg"
+          className="w-full py-3 rounded-2xl bg-linear-to-r from-blue-600 to-blue-400 text-white font-semibold shadow-lg border border-blue-500 hover:from-blue-700 hover:to-blue-500 transition-all duration-300"
           onClick={() => setChatOpen(true)}
         >
           {t.talk}
@@ -166,7 +176,7 @@ export default function LandingPage() {
 
         <motion.button
           whileTap={{ scale: 0.95 }}
-          className="w-full py-3 rounded-2xl bg-red-500 text-white font-semibold shadow-lg border border-white/20"
+          className="w-full py-3 rounded-2xl bg-linear-to-r from-black/70 via-blue-900 to-black text-white font-semibold shadow-lg border border-blue-500 hover:from-black/80 hover:via-blue-800 hover:to-black transition-all duration-300"
           onClick={() => setLocationOpen(true)}
         >
           {t.location}
@@ -174,14 +184,14 @@ export default function LandingPage() {
 
         <motion.button
           whileTap={{ scale: 0.95 }}
-          className="w-full py-3 rounded-2xl bg-red-500 text-white font-semibold shadow-lg border border-white/20"
+          className="w-full py-3 rounded-2xl bg-linear-to-r from-blue-700 to-black text-white font-semibold shadow-lg border border-blue-500 hover:from-blue-800 hover:to-black transition-all duration-300"
           onClick={() => navigate("/food")}
         >
           {t.order}
         </motion.button>
       </div>
 
-      <p className="mt-10 text-xs opacity-70">© 2025 ALI — CTM Inspired</p>
+      <p className="mt-10 text-xs opacity-70 drop-shadow-sm z-20">© 2025 ALI — CTM Inspired</p>
 
       <AnimatePresence>
         {chatOpen && (
@@ -189,17 +199,17 @@ export default function LandingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70"
           >
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="relative w-full max-w-md h-[600px] bg-white rounded-xl shadow-lg overflow-hidden"
+              className="relative w-full max-w-md h-[600px] bg-black/90 rounded-xl shadow-2xl overflow-hidden border border-blue-500"
             >
               <button
-                className="absolute top-2 right-2 text-red-600 font-bold text-lg z-50"
+                className="absolute top-2 right-2 text-blue-400 font-bold text-lg z-50 hover:text-blue-200"
                 onClick={() => setChatOpen(false)}
               >
                 ✕
@@ -220,31 +230,26 @@ export default function LandingPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
           >
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="relative w-full max-w-md p-6 bg-linear-to-b from-red-600/80 to-red-900/90 rounded-2xl shadow-2xl flex flex-col gap-4"
+              className="relative w-full max-w-md p-6 bg-linear-to-b from-black/80 via-blue-900/90 to-black/90 rounded-2xl shadow-2xl flex flex-col gap-4 border border-blue-500"
             >
-
               <button
-                className="absolute top-3 right-3 text-white font-bold text-lg hover:text-blue-800 transition-colors"
+                className="absolute top-3 right-3 text-blue-400 font-bold text-lg hover:text-blue-200 transition-colors"
                 onClick={() => setLocationOpen(false)}
               >
                 ✕
               </button>
 
-              <h2 className="text-2xl font-bold mb-2 text-center text-white">
-                📍 {t.location}
-              </h2>
+              <h2 className="text-2xl font-bold mb-2 text-center text-blue-400">📍 {t.location}</h2>
               <p className="text-white text-center text-sm">
                 Your current location is tracked live. Enter your destination to see distance and time.
               </p>
-
-
 
               <div className="flex gap-2">
                 <input
@@ -252,20 +257,24 @@ export default function LandingPage() {
                   value={destination}
                   onChange={(e) => setDestination(e.target.value)}
                   placeholder={t.enterCity || "Enter destination"}
-                  className="flex-1 border border-blue-300 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400"
+                  className="flex-1 border border-blue-500 p-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-400 bg-black/70 text-white"
                 />
                 <button
                   onClick={fetchDestCoords}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                  className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   Search
                 </button>
               </div>
 
               {distanceKm && duration && (
-                <div className="bg-blue-50 p-3 rounded-lg border border-blue-200 text-blue-700 flex flex-col items-center justify-between">
-                  <span>{t.distance}: <span className=" font-bold">{distanceKm.toFixed(1)} km</span></span>
-                  <span>{t.duration}: <span className=" font-bold">{duration}</span></span>
+                <div className="bg-blue-900/70 p-3 rounded-lg border border-blue-500 text-blue-300 flex flex-col items-center justify-between">
+                  <span>
+                    {t.distance}: <span className="font-bold">{distanceKm.toFixed(1)} km</span>
+                  </span>
+                  <span>
+                    {t.duration}: <span className="font-bold">{duration}</span>
+                  </span>
                 </div>
               )}
 
@@ -273,12 +282,10 @@ export default function LandingPage() {
                 <MapContainer
                   center={[coords.lat, coords.lng] as LatLngTuple}
                   zoom={6}
-                  className="h-64 w-full rounded-xl shadow-md border border-gray-200"
+                  className="h-64 w-full rounded-xl shadow-lg border border-blue-500"
                 >
                   <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
                   <Marker position={[coords.lat, coords.lng] as LatLngTuple} />
-
                   {destCoords && (
                     <>
                       <Marker position={[destCoords.lat, destCoords.lng] as LatLngTuple} />
@@ -287,7 +294,7 @@ export default function LandingPage() {
                           [coords.lat, coords.lng],
                           [destCoords.lat, destCoords.lng],
                         ] as LatLngTuple[]}
-                        pathOptions={{ color: "blue", weight: 4, dashArray: "8,4" }}
+                        pathOptions={{ color: "cyan", weight: 4, dashArray: "8,4" }}
                       />
                       <FitBounds
                         coords1={[coords.lat, coords.lng] as LatLngTuple}
@@ -301,8 +308,6 @@ export default function LandingPage() {
           </motion.div>
         )}
       </AnimatePresence>
-
-
     </div>
   );
 }

@@ -18,7 +18,7 @@ const translations = {
     subtitle: "Your travel assistant for CTM – Scan, Chat, and Order.",
     talk: "Talk with Ali (CTM AI Assistant)",
     order: "Order Food",
-    location: "Your Current Location",
+    location: "Where am I now?",
     enterCity: "Enter Destination City",
     distance: "Distance Left",
     duration: "Estimated Time Left",
